@@ -11,62 +11,16 @@
 <body>
     <div id="container"></div>
 
-    <script src="data.js"></script>
+    <script src="eotv-models.js"></script>
+    <script src="generator.js"></script>
+    <script src="view-template.js"></script>
+    
     <script>
+        const generator = new Generator(eotvModels);
+        const data = generator.generateData();
         const container = document.getElementById('container');
 
-        const defaultPropsTemplate = props => {
-            const propsContainer = document.createElement("ul");
-
-            const valueBySource = source => {
-                let value = source[Math.floor(Math.random() * source.length)];
-                let name = value.name;
-                let notes = value.notes;
-                let valueSource = value.source;
-                
-                if(value.value) {
-                    value = value.value;
-                }
-
-                if(valueSource) {
-                    const valueObj = valueBySource(valueSource);
-                    value = `${value.name} - ${valueObj.value}`;
-                    notes = valueObj.notes || notes;
-                }
-
-                return { value, notes };
-            };
-
-            props.forEach(prop => {
-                const propItem = document.createElement("li");
-                const randomPropValue = valueBySource(prop.source);
-                propItem.innerHTML = `${prop.name}: <b>${randomPropValue.value}</b> <i>${randomPropValue.notes || ''}</i>`;
-                propsContainer.appendChild(propItem);
-            });
-            
-            return propsContainer;
-        }
-
-        entities.forEach(entity => {
-            for (let i = 1; i <= entity.defaultCount; i++) {
-                const entityContainer = document.createElement("div");
-                container.appendChild(entityContainer);
-
-                const titleContainer = document.createElement("div");
-                titleContainer.innerHTML = `<h3>${entity.name} ${i}</h3>`;
-                entityContainer.appendChild(titleContainer);
-
-                const propsContainer = defaultPropsTemplate(entity.props);
-                entityContainer.appendChild(propsContainer);
-            }
-            
-            entity.notes && entity.notes.forEach(note => {
-                const notesContainer = document.createElement("p");
-                notesContainer.innerHTML = `<i>${note}</i>`;
-                container.appendChild(notesContainer);
-            });
-        });
-        
+        viewTemplate.render(container, data);
     </script>
 </body>
 

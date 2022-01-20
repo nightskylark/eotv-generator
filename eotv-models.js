@@ -386,7 +386,7 @@ const eventProps = [
     }
 ];
 
-const entities = [
+const eotvModels = [
     {
         name: 'Персонаж мастера',
         props: npcProps,
